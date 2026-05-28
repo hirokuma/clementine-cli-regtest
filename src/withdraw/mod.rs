@@ -67,8 +67,15 @@ pub async fn generate_withdrawal_signatures(
     operator_withdrawal_amount: &Amount,
     config: &BridgeCliConfig,
     sqlite_client: Option<&SqliteDb>,
-) -> Result<(Signature, Signature), BridgeCliError> {
+) -> Result<(Signature, Signature, Signature), BridgeCliError> {
     ensure_wallet_exists(signer_address, sqlite_client).await?;
+
+    println!("@@@@@ generate_withdrawal_signatures");
+    println!("@@@@@   signer_address: {:?}", signer_address);
+    println!("@@@@@   destination_address: {}", destination_address);
+    println!("@@@@@   withdrawal_utxo: {}", withdrawal_utxo);
+    println!("@@@@@   optimistic_withdrawal_amount: {}", optimistic_withdrawal_amount);
+    println!("@@@@@   operator_withdrawal_amount: {}", operator_withdrawal_amount);
 
     if signer_address.purpose != Purpose::Withdrawal {
         return Err(BridgeCliError::PurposeMismatch {
@@ -100,9 +107,20 @@ pub async fn generate_withdrawal_signatures(
         config,
     )?;
 
+    const MIN_PAYOUT: u64 = 9_9989_9670; // bridge_amount_sats(10BTC) - input_amount(0.00000330BTC) - operator_withdrawal_fee_sats(0.0010BTC)
+    let withdrawal_signature = sign_withdrawal_signature(
+        &keypair,
+        &signer_address.address,
+        withdrawal_utxo,
+        destination_address,
+        Amount::from_sat(MIN_PAYOUT),
+        config,
+    )?;
+
     Ok((
         optimistic_withdrawal_signature,
         operator_withdrawal_signature,
+        withdrawal_signature,
     ))
 }
 
@@ -253,7 +271,7 @@ pub async fn scan_withdrawal(
     Ok(utxos)
 }
 
-/// Common withdrawal parameter preparation pattern (reduces major duplication)  
+/// Common withdrawal parameter preparation pattern (reduces major duplication)
 pub async fn prepare_withdrawal_params(
     withdrawal_outpoint: &OutPoint,
     payout_output: &TxOut,

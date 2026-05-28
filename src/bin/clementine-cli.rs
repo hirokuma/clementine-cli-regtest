@@ -731,7 +731,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         &config.operator_withdrawal_amount,
                         &config,
                     ),
-                    (optimistic_signature, operator_signature) => {
+                    (optimistic_signature, operator_signature, withdraw_signature) => {
                         println!();
                         println!(
                             "Optimistic withdrawal signature hex: {}",
@@ -741,6 +741,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         println!(
                             "Operator-paid withdrawal signature hex: {}",
                             serialize_and_encode(operator_signature)
+                        );
+                        println!();
+                        println!(
+                            "Normal withdrawal signature hex: {}",
+                            serialize_and_encode(withdraw_signature)
                         );
                         println!("If the transaction that created your withdrawal UTXO is not yet confirmed, please wait for it to be confirmed before proceeding.");
                         println!("After its confirmation run:");

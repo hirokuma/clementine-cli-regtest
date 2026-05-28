@@ -385,6 +385,7 @@ pub(crate) fn sign_withdrawal_signature(
 
     let sighash = create_withdrawal_sighash(&withdrawal_tx, &prevout)?;
     let sig = sign_with_tweak(keypair, sighash, None);
+    println!("@@@@@ sign_withdrawal_signature: amount={}, sighash={:?}", amount, sighash);
 
     Ok(bitcoin::taproot::Signature {
         signature: sig,

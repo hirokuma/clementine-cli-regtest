@@ -1551,7 +1551,7 @@ pub async fn cli_generate_withdrawal_signatures(
     optimistic_withdrawal_amount: &Amount,
     operator_withdrawal_amount: &Amount,
     config: &BridgeCliConfig,
-) -> Result<(Signature, Signature), BridgeCliError> {
+) -> Result<(Signature, Signature, Signature), BridgeCliError> {
     // Pre-check to ensure wallet exists before prompting for passphrase for better UX
     ensure_wallet_exists(signer_address, None).await?;
     let keypair = load_key_with_purpose_check(signer_address, Purpose::Withdrawal, None).await?;
