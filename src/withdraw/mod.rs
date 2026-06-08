@@ -65,6 +65,7 @@ pub async fn generate_withdrawal_signatures(
     withdrawal_utxo: &OutPoint,
     optimistic_withdrawal_amount: &Amount,
     operator_withdrawal_amount: &Amount,
+    operator_withdrawal_fee_sats: &Amount,
     config: &BridgeCliConfig,
     sqlite_client: Option<&SqliteDb>,
 ) -> Result<(Signature, Signature, Signature), BridgeCliError> {
@@ -107,13 +108,14 @@ pub async fn generate_withdrawal_signatures(
         config,
     )?;
 
-    const MIN_PAYOUT: u64 = 9_9989_9670; // bridge_amount_sats(10BTC) - input_amount(0.00000330BTC) - operator_withdrawal_fee_sats(0.0010BTC)
+    // for Clementine is_profitable() function check
+    let min_payout = *optimistic_withdrawal_amount - *operator_withdrawal_fee_sats;
     let withdrawal_signature = sign_withdrawal_signature(
         &keypair,
         &signer_address.address,
         withdrawal_utxo,
         destination_address,
-        Amount::from_sat(MIN_PAYOUT),
+        min_payout,
         config,
     )?;
 

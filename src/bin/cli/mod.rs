@@ -1550,6 +1550,7 @@ pub async fn cli_generate_withdrawal_signatures(
     withdrawal_utxo: &OutPoint,
     optimistic_withdrawal_amount: &Amount,
     operator_withdrawal_amount: &Amount,
+    operator_withdrawal_fee_sats: &Amount,
     config: &BridgeCliConfig,
 ) -> Result<(Signature, Signature, Signature), BridgeCliError> {
     // Pre-check to ensure wallet exists before prompting for passphrase for better UX
@@ -1563,6 +1564,7 @@ pub async fn cli_generate_withdrawal_signatures(
         withdrawal_utxo,
         optimistic_withdrawal_amount,
         operator_withdrawal_amount,
+        operator_withdrawal_fee_sats,
         config,
         None,
     )

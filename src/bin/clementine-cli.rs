@@ -729,6 +729,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         &withdrawal_outpoint,
                         &config.optimistic_withdrawal_amount,
                         &config.operator_withdrawal_amount,
+                        &config.operator_withdrawal_fee_sats,
                         &config,
                     ),
                     (optimistic_signature, operator_signature, withdraw_signature) => {

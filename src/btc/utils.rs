@@ -551,6 +551,7 @@ mod tests {
                 bridge_amount: Amount::from_sat(100000),
                 optimistic_withdrawal_amount: Amount::from_sat(50000),
                 operator_withdrawal_amount: Amount::from_sat(1000),
+                operator_withdrawal_fee_sats: Amount::from_sat(0),
                 dust_utxo_amount: Amount::from_sat(330),
                 bridge_contract_address: "0x1234567890123456789012345678901234567890".to_string(),
                 bitcoin_config: None,
